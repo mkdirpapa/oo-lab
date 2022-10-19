@@ -4,25 +4,25 @@ import static java.lang.System.out;
 
 public class World {
 
-    public static Direction[] enumTab(String[] directions) {
+    public static MoveDirection[] enumTab(String[] directions) {
         int l = directions.length;
-        Direction[] dir = new Direction[l];
+        MoveDirection[] dir = new MoveDirection[l];
 
         for (int i=0; i<l; i++) {
             switch (directions[i]) {
-                case "f" -> dir[i] = Direction.FORWARD;
-                case "b" -> dir[i] = Direction.BACKWARD;
-                case "l" -> dir[i] = Direction.LEFT;
-                case "r" -> dir[i] = Direction.RIGHT;
+                case "f" -> dir[i] = MoveDirection.FORWARD;
+                case "b" -> dir[i] = MoveDirection.BACKWARD;
+                case "l" -> dir[i] = MoveDirection.LEFT;
+                case "r" -> dir[i] = MoveDirection.RIGHT;
             }
         }
         return dir;
     }
 
-    public static void run(Direction[] dir) {
+    public static void run(MoveDirection[] dir) {
         int l = dir.length;
         int i = 0;
-        for (Direction arg : dir) {
+        for (MoveDirection arg : dir) {
             System.out.print("Zwierzak ");
             switch (arg) {
                 case FORWARD -> out.print("idzie do przodu");
@@ -40,7 +40,7 @@ public class World {
     public static void main(String[] directions) {
         System.out.print("Start \n");
 
-        Direction[] dir = enumTab(directions);
+        MoveDirection[] dir = enumTab(directions);
         run(dir);
 
         System.out.print("\nStop");
