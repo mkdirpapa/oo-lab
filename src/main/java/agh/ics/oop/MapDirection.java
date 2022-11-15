@@ -7,19 +7,19 @@ public enum MapDirection {
     WEST,
     EAST;
 
-    public String toString(MapDirection arg) {
-        switch (arg) {
+    public String toString() {
+        switch (this) {
             case NORTH:
-                return "Północ";
+                return "^";
 
             case SOUTH:
-                return "Południe";
+                return "v";
 
             case EAST:
-                return "Wschód";
+                return ">";
 
             case WEST:
-                return "Zachód";
+                return "<";
         }
         return null;
     }
