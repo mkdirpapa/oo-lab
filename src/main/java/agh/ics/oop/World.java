@@ -3,26 +3,10 @@ import static java.lang.System.out;
 
 
 public class World {
-
-    public static Direction[] enumTab(String[] directions) {
-        int l = directions.length;
-        Direction[] dir = new Direction[l];
-
-        for (int i=0; i<l; i++) {
-            switch (directions[i]) {
-                case "f" -> dir[i] = Direction.FORWARD;
-                case "b" -> dir[i] = Direction.BACKWARD;
-                case "l" -> dir[i] = Direction.LEFT;
-                case "r" -> dir[i] = Direction.RIGHT;
-            }
-        }
-        return dir;
-    }
-
-    public static void run(Direction[] dir) {
+    public static void run(MoveDirection[] dir, Animal animal) {
         int l = dir.length;
         int i = 0;
-        for (Direction arg : dir) {
+        for (MoveDirection arg : dir) {
             System.out.print("Zwierzak ");
             switch (arg) {
                 case FORWARD -> out.print("idzie do przodu");
@@ -31,6 +15,7 @@ public class World {
                 case RIGHT-> out.print("skręca w prawo");
 
             }
+            animal.move(arg);
             if (i != l - 1) {
                 System.out.print(", \n");
             }
@@ -38,12 +23,20 @@ public class World {
         }
     }
     public static void main(String[] directions) {
-        System.out.print("Start \n");
+        out.print("Start \n");
 
-        Direction[] dir = enumTab(directions);
-        run(dir);
+        MoveDirection[] dir = OptionsParser.parse(directions);
 
-        System.out.print("\nStop");
+        Animal doggo = new Animal();
+        out.print(doggo.toString());
+        out.print("\n");
+
+        run(dir, doggo);
+        out.print("\n");
+
+        out.print(doggo.toString());
+
+        out.print("\nStop");
 
     }
 
