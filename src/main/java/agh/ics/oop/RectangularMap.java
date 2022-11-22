@@ -1,38 +1,26 @@
 package agh.ics.oop;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
-public class RectangularMap implements IWorldMap{
-    private int width;
-    private int height;
-    public ArrayList <Animal> animals;
-    private MapVisualizer mapVisualizer;
+public class RectangularMap extends AbstractWorldMap{
+    private final int width;
+    private final int height;
+
 
     public RectangularMap(int width, int height){
         this.width = width;
         this.height = height;
-        this.animals = new ArrayList<>();
-        this.mapVisualizer = new MapVisualizer(this);
-
 
     }
-
-    public boolean isOccupied(Vector2d position){
-        for (Animal object : animals){
-            if (object.isAt(position)){ return true; }
-        }
-        return false;
-    }
-
 
     public Object objectAt(Vector2d position) {
-        for (Animal object : animals){
-            if(object.getPosition().equals(position)){
-                return object;
-            }
-        }
-        return null;
+        return animals.stream()
+                .filter(animal -> Objects.equals(position, animal.getPosition()))
+                .findFirst()
+                .orElse(null);
     }
 
     public boolean canMoveTo(Vector2d position) {
@@ -41,19 +29,13 @@ public class RectangularMap implements IWorldMap{
                 position.precedes(new Vector2d(this.width,this.height)));
     }
 
-    public boolean place(Animal animal) {
-        if (this.canMoveTo(animal.getPosition())){
-            animals.add(animal);
-            return true;
-        }
-        return false;
+    @Override
+    protected Vector2d lowerLeftCorner() {
+        return new Vector2d(0,0);
     }
 
-    public String toString() {
-        return mapVisualizer.draw(new Vector2d(0,0), new Vector2d(this.width, this.height));
-    }
-
-    public ArrayList<Animal> getAnimals(){
-        return this.animals;
+    @Override
+    protected Vector2d upperRightCorner() {
+        return new Vector2d(this.width, this.height);
     }
 }
