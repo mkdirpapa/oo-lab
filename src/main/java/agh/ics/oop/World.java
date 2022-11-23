@@ -3,38 +3,17 @@ import static java.lang.System.out;
 
 
 public class World {
-    public static void run(MoveDirection[] dir, Animal animal) {
-        int l = dir.length;
-        int i = 0;
-        for (MoveDirection arg : dir) {
-            System.out.print("Zwierzak ");
-            switch (arg) {
-                case FORWARD -> out.print("idzie do przodu");
-                case BACKWARD -> out.print("idzie do tyłu");
-                case LEFT -> out.print("skręca w lewo");
-                case RIGHT-> out.print("skręca w prawo");
+    public static final Vector2d LOWER_BOUND = new Vector2d(0, 0);
+    public static final Vector2d UPPER_BOUND = new Vector2d(4, 4);
 
-            }
-            animal.move(arg);
-            if (i != l - 1) {
-                System.out.print(", \n");
-            }
-            i = i + 1;
-        }
-    }
-    public static void main(String[] directions) {
+    public static void main(String[] args) {
         out.print("Start \n");
 
-        MoveDirection[] dir = OptionsParser.parse(directions);
-
-        Animal doggo = new Animal();
-        out.print(doggo.toString());
-        out.print("\n");
-
-        run(dir, doggo);
-        out.print("\n");
-
-        out.print(doggo.toString());
+        MoveDirection[] directions = new OptionsParser().parse(args);
+        IWorldMap map = new RectangularMap(10, 5);
+        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
+        IEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
 
         out.print("\nStop");
 

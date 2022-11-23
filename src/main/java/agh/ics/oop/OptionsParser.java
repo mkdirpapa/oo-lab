@@ -1,28 +1,28 @@
 package agh.ics.oop;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import static java.lang.System.out;
 
 
 public class OptionsParser {
     public static MoveDirection[] parse(String[] directions) {
-        int l1 = directions.length;
-        int l2 = 0;
+        return Stream.of(directions)
+                .map(getStringMoveDirection()
+                )
+                .filter(moveDirection -> moveDirection != null)
+                .toArray(MoveDirection[]::new);
+    }
 
-        for (int i=0; i<l1; i++) {
-            if(directions[i].equals("f") || directions[i].equals("b") || directions[i].equals("l") || directions[i].equals("r")){
-                l2+=1;
-            }
-        }
-
-        MoveDirection[] directions_tab = new MoveDirection[l2];
-
-        for (int i=0; i<l2; i++) {
-            switch (directions[i]) {
-                case "f" -> directions_tab[i] = MoveDirection.FORWARD;
-                case "b" -> directions_tab[i] = MoveDirection.BACKWARD;
-                case "l" -> directions_tab[i] = MoveDirection.LEFT;
-                case "r" -> directions_tab[i] = MoveDirection.RIGHT;
-            }
-        }
-        return directions_tab;
+    private static Function<String, MoveDirection> getStringMoveDirection() {
+        return instruction ->
+                switch (instruction) {
+                    case "f", "forward" -> MoveDirection.FORWARD;
+                    case "b", "backward" -> MoveDirection.BACKWARD;
+                    case "l", "left" -> MoveDirection.LEFT;
+                    case "r", "right" -> MoveDirection.RIGHT;
+                    default -> null;
+                };
     }
 }
