@@ -1,10 +1,10 @@
 package agh.ics.oop;
-import java.util.ArrayList;
+import java.util.List;
 import static java.lang.System.out;
 public class SimulationEngine implements IEngine{
     private MoveDirection[] directions;
     private IWorldMap map;
-    private ArrayList<Animal> allAnimals;
+    private List<Animal> allAnimals;
     public SimulationEngine(MoveDirection[] directions, IWorldMap map, Vector2d[] positions){
         this.directions = directions;
         this.map = map;
@@ -16,13 +16,12 @@ public class SimulationEngine implements IEngine{
         this.allAnimals = map.getAnimals();
     }
     public void run() {
-        int numberOfAnimals = this.allAnimals.toArray().length;
+        int numberOfAnimals = this.allAnimals.size();
         int i = 0;
         for (MoveDirection direction : directions) {
-            Animal animal = this.allAnimals.get(i);
+            Animal animal = this.allAnimals.get(i%numberOfAnimals);
             animal.move(direction);
             i+=1;
-            if (i == numberOfAnimals) {i = 0;}
         }
         out.print(map.toString());
     }

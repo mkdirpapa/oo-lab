@@ -1,4 +1,4 @@
-/*
+
 package agh.ics.oop;
 
 
@@ -14,22 +14,18 @@ public class AnimalTest {
         Animal floppa = new Animal();
         //orientacja
         floppa.move(MoveDirection.LEFT);
-        assertEquals("(2, 2)WEST", floppa.toString());
+        assertEquals("<", floppa.toString());
 
         floppa.move(MoveDirection.RIGHT);
-        assertEquals("(2, 2)NORTH", floppa.toString());
+        assertEquals("^", floppa.toString());
 
         //ruch
         floppa.move(MoveDirection.FORWARD);
-        assertEquals("(2, 3)NORTH", floppa.toString());
+        assertEquals(new Vector2d(2,3), floppa.getPosition());
         floppa.move(MoveDirection.RIGHT);
         floppa.move(MoveDirection.BACKWARD);
-        assertEquals("(1, 3)EAST", floppa.toString());
+        assertEquals(new Vector2d(1,3), floppa.getPosition());
 
-        //wyjscie poza mape
-        floppa.move(MoveDirection.BACKWARD);
-        floppa.move(MoveDirection.BACKWARD);
-        assertEquals("(0, 3)EAST", floppa.toString());
     }
 
     @Test
@@ -41,4 +37,4 @@ public class AnimalTest {
     }
 
 }
-*/
+

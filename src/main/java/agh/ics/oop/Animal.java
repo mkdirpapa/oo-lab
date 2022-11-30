@@ -1,12 +1,15 @@
 package agh.ics.oop;
 
-public class Animal {
+public class Animal extends AbstractWorldMapElement {
     private MapDirection orientation = MapDirection.NORTH;
-    private Vector2d position = new Vector2d(2, 2);
     private IWorldMap map;
 
+    public Animal(){
+        this(new RectangularMap(4,4));
+    }
+
     public Animal(IWorldMap map) {
-        this.map = map;
+        this(map, new Vector2d(2,2));
     }
 
     public Animal(IWorldMap map, Vector2d startingPosition) {
@@ -18,10 +21,6 @@ public class Animal {
 
     public String toString() {
         return this.orientation.toString();
-    }
-
-    public Vector2d getPosition(){
-        return this.position;
     }
 
     public boolean isAt(Vector2d position) {
@@ -49,11 +48,6 @@ public class Animal {
 
 
     }
-
-
 }
-
-    //Aby uniknac zderzania się zwierząt, informację o tym, czy pole jest zajmowane, czy nie, można przechowywać
-    // w tablicy, w nowym polu w klasie World, którą przekazujemy i modyfikujemy podczas ruchu zwierzecia
 
 
