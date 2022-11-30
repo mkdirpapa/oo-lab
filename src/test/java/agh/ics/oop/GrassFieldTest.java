@@ -10,9 +10,8 @@ class GrassFieldTests {
         Vector2d position = new Vector2d(2, 2);
         Animal animal1 = new Animal(map, position);
         Animal animal2 = new Animal(map, position);
-        ((GrassField) map).addGrass(position);
 
-        assertTrue(map.objectAt(position)  instanceof Grass);
+        assertFalse(map.objectAt(position)  instanceof Grass);
         assertTrue(map.place(animal1));
         assertFalse(map.place(animal2));
 
