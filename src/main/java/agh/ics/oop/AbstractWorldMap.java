@@ -1,24 +1,20 @@
 package agh.ics.oop;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
 
-    private final ArrayList<Animal> animalList = new ArrayList<>();
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
-
-    protected ArrayList<Animal> getAnimals() {
-        return animalList;
-    }
-    public boolean place(Animal animal) {
+    protected final MapBoundary mapBoundary = new MapBoundary();
+    public void place(Animal animal) throws IllegalArgumentException{
         if (this.canMoveTo(animal.getPosition())) {
-            animalList.add(animal);
             animals.put(animal.getPosition(), animal);
             animal.addObserver(this);
-            return true;
+            mapBoundary.addPosition(animal.getPosition());
         }
-        return false;
+        else {
+            throw new IllegalArgumentException("cannot place an Animal on " + animal.getPosition());
+        }
     }
 
     public Object objectAt(Vector2d position) {
@@ -27,10 +23,10 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
 
     public boolean isOccupied(Vector2d position) {
 
-        return (objectAt(position) != null);
+        return objectAt(position) != null;
         }
-    protected abstract Vector2d lowerLeftCorner();
-    protected abstract Vector2d upperRightCorner();
+    public abstract Vector2d lowerLeftCorner();
+    public abstract Vector2d upperRightCorner();
 
     @Override
     public String toString() {
@@ -39,6 +35,8 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
     }
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
         Animal animal = animals.remove(oldPosition);
-        animals.put(newPosition, animal);
+        if(animal != null) {
+            animals.put(newPosition, animal);
+        }
     }
 }

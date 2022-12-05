@@ -19,6 +19,7 @@ public class GrassField extends AbstractWorldMap{
 
             if(!isOccupied(field)) {
                 grasses.put(new Vector2d(x, y),new Grass(field));
+                mapBoundary.addPosition(field);
             }
             else{ i-=1; }
         }
@@ -35,39 +36,19 @@ public class GrassField extends AbstractWorldMap{
     }
 
     @Override
-    protected Vector2d lowerLeftCorner() {
-        Vector2d corner = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
-
-        for(Vector2d position: grasses.keySet()){
-            corner = corner.lowerLeft(position);
-        }
-        for(Vector2d position: animals.keySet()){
-            corner = corner.lowerLeft(position);
-        }
-        return corner;
+    public Vector2d lowerLeftCorner() {
+        return this.mapBoundary.getLowerLeft();
     }
 
     @Override
-    protected Vector2d upperRightCorner() {
-        Vector2d corner = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);;
-
-        for(Vector2d position : grasses.keySet()){
-            corner = corner.upperRight(position);
-        }
-        for(Vector2d position : animals.keySet()){
-            corner = corner.upperRight(position);
-        }
-        return corner;
+    public Vector2d upperRightCorner() {
+        return this.mapBoundary.getUpperRight();
     }
     public Object objectAt(Vector2d position) {
-        if (super.objectAt(position) == null) {
+        Object foundObject = super.objectAt(position);
+        if (foundObject  == null) {
             return grasses.get(position);
         }
-        return  super.objectAt(position);
-    }
-
-    @Override
-    public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
-
+        return  foundObject ;
     }
 }

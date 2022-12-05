@@ -20,17 +20,13 @@ public class RectangularMap extends AbstractWorldMap{
     }
 
     @Override
-    protected Vector2d lowerLeftCorner() {
+    public Vector2d lowerLeftCorner() {
         return new Vector2d(0,0);
     }
 
     @Override
-    protected Vector2d upperRightCorner() {
+    public Vector2d upperRightCorner() {
         return new Vector2d(this.width, this.height);
     }
 
-    @Override
-    public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
-
-    }
 }

@@ -1,4 +1,6 @@
 package agh.ics.oop;
+import java.util.Objects;
+
 import static java.lang.System.out;
 
 public class Vector2d {
@@ -55,6 +57,10 @@ public class Vector2d {
         return x == vector2d.x && y == vector2d.y;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
 
     public static void main(String[] args) {
         Vector2d position1 = new Vector2d(1,2);

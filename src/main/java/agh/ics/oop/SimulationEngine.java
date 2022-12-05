@@ -5,18 +5,22 @@ import static java.lang.System.out;
 public class SimulationEngine implements IEngine{
     private MoveDirection[] directions;
     private AbstractWorldMap map;
-    private List<Animal> allAnimals;
+    private final ArrayList<Animal> allAnimals = new ArrayList<>();
+
     public SimulationEngine(MoveDirection[] directions, AbstractWorldMap map, Vector2d[] positions){
         this.directions = directions;
         this.map = map;
 
         for (Vector2d position : positions){
             Animal animal = new Animal(this.map, position);
-            if(!map.isOccupied(position)){
-                map.place(animal);
+            if(this.map.canMoveTo(position)){
+                this.map.place(animal);
+                this.allAnimals.add(animal);
+                animal.addObserver(
+                        (oldPosition, newPosition) -> System.out.print(oldPosition + " " + newPosition));
             }
         }
-        this.allAnimals = map.getAnimals();
+
     }
     public void run() {
         int numberOfAnimals = this.allAnimals.size();
