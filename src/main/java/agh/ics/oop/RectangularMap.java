@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 public class RectangularMap extends AbstractWorldMap{
     private final int width;
     private final int height;
@@ -15,16 +14,7 @@ public class RectangularMap extends AbstractWorldMap{
         this.height = height;
 
     }
-
-    public Object objectAt(Vector2d position) {
-        return animals.stream()
-                .filter(animal -> Objects.equals(position, animal.getPosition()))
-                .findFirst()
-                .orElse(null);
-    }
-
     public boolean canMoveTo(Vector2d position) {
-
         return (!this.isOccupied(position) && position.follows(new Vector2d(0,0)) &&
                 position.precedes(new Vector2d(this.width,this.height)));
     }
@@ -37,5 +27,10 @@ public class RectangularMap extends AbstractWorldMap{
     @Override
     protected Vector2d upperRightCorner() {
         return new Vector2d(this.width, this.height);
+    }
+
+    @Override
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
+
     }
 }

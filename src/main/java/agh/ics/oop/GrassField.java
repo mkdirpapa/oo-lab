@@ -6,9 +6,10 @@ import java.util.Objects;
 
 import static java.lang.Math.sqrt;
 import static java.lang.Math.random;
+import java.util.HashMap;
 
 public class GrassField extends AbstractWorldMap{
-    private List<Grass> grasses = new ArrayList<>();
+    protected HashMap<Vector2d,Grass> grasses = new HashMap<>();
     public GrassField(int grassAmount ){
         for(int i = 0; i<grassAmount; i++) {
 
@@ -17,61 +18,56 @@ public class GrassField extends AbstractWorldMap{
             Vector2d field = new Vector2d(x, y);
 
             if(!isOccupied(field)) {
-                addGrass(field);
+                grasses.put(new Vector2d(x, y),new Grass(field));
             }
             else{ i-=1; }
         }
 
     }
-    public void addGrass(Vector2d position){
-        grasses.add(new Grass(position));
-    }
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return !(this.objectAt(position) instanceof Animal);
+        return !animals.containsKey(position);
     }
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        return objectAt(position) != null;
+        return (this.grasses.containsKey(position) || super.isOccupied(position));
     }
 
     @Override
     protected Vector2d lowerLeftCorner() {
-        Vector2d corner = new Vector2d(0, 0);
+        Vector2d corner = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
-        for(Grass grass : grasses){
-            corner = corner.lowerLeft(grass.getPosition());
+        for(Vector2d position: grasses.keySet()){
+            corner = corner.lowerLeft(position);
         }
-        for(Animal animal : animals){
-            corner = corner.lowerLeft(animal.getPosition());
+        for(Vector2d position: animals.keySet()){
+            corner = corner.lowerLeft(position);
         }
         return corner;
     }
 
     @Override
     protected Vector2d upperRightCorner() {
-        Vector2d corner = new Vector2d(0, 0);
+        Vector2d corner = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);;
 
-        for(Grass grass : grasses){
-            corner = corner.upperRight(grass.getPosition());
+        for(Vector2d position : grasses.keySet()){
+            corner = corner.upperRight(position);
         }
-        for(Animal animal : animals){
-            corner = corner.upperRight(animal.getPosition());
+        for(Vector2d position : animals.keySet()){
+            corner = corner.upperRight(position);
         }
         return corner;
     }
     public Object objectAt(Vector2d position) {
-        for(Animal animal : animals){
-            if(animal.getPosition().equals(position)){
-                return animal;
-            }
+        if (super.objectAt(position) == null) {
+            return grasses.get(position);
         }
-        for(Grass grass : grasses){
-            if(grass.getPosition().equals(position)){
-                return grass;
-            }
-        }
-        return null;
+        return  super.objectAt(position);
+    }
+
+    @Override
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
+
     }
 }
