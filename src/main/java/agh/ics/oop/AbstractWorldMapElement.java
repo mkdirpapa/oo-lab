@@ -6,4 +6,7 @@ public abstract class AbstractWorldMapElement {
         return this.position;
     }
     public abstract String toString();
+
+    public abstract String getImagePath();
+
 }

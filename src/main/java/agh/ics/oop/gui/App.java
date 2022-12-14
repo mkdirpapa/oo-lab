@@ -9,13 +9,20 @@ import javafx.stage.Stage;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import javafx.geometry.HPos;
+import javafx.scene.layout.VBox;
+import javafx.application.Platform;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
 
 public class App extends Application {
-    private AbstractWorldMap map;
-    private int windowHeight = 400;
-    private int windowWidth = 400;
-    private String title = "Aplikacja";
-
+    private AbstractWorldMap map = new GrassField(10);
+    private SimulationEngine engine;
+    private int windowHeight = 700;
+    private int windowWidth = 700;
+    private GridPane grid = new GridPane();
+    private String title = "Fire walk with me";
+    private int moveDelay  = 300;
+/*
     public void init(){
         String[] args = getParameters().getRaw().toArray(new String[0]);
         this.map = new GrassField(10);
@@ -23,18 +30,53 @@ public class App extends Application {
 
         try {
             MoveDirection[] directions = new OptionsParser().parse(args);
-            IEngine engine = new SimulationEngine(directions, map, positions);
-            engine.run();
+            this.engine = new SimulationEngine(directions, map, positions, this);
+            engine.setMoveDelay(this.moveDelay);
         }
         catch (IllegalArgumentException exception){
             System.out.println(exception);
             System.exit(0);
         }
+    }
+    */
 
+    public void start(Stage primary_stage) {
+        TextField textField = new TextField();
+
+        newGrid();
+        VBox vBox = new VBox(
+                grid,
+                textField,
+                startButton(textField));
+
+        Scene scene = new Scene(vBox, windowWidth, windowHeight + 63);
+        primary_stage.setTitle(title);
+        primary_stage.setScene(scene);
+        primary_stage.show();
     }
 
+    public Button startButton(TextField textField) {
+        Button startButton = new Button("Let's rock");
+        startButton.setOnAction((action) -> {
+            String text = textField.getText();
 
-    public void start(Stage primaryStage){
+            Vector2d[] positions = {new Vector2d(2, 2)};
+            try {
+                MoveDirection[] directions = OptionsParser.parse(text.split(" "));
+                this.engine = new SimulationEngine(directions, map, positions, this);
+                engine.setMoveDelay(this.moveDelay);
+                Thread thread = new Thread(engine);
+                thread.start();
+            }
+            catch (IllegalArgumentException exception){
+                System.out.println(exception);
+                System.exit(0);
+            }
+        });
+        return startButton;
+    }
+
+    public void newGrid(){
         int minX = map.lowerLeftCorner().x;
         int maxX = map.upperRightCorner().x;
         int minY = map.lowerLeftCorner().y;
@@ -43,7 +85,7 @@ public class App extends Application {
         int width = windowWidth / (maxX - minX+2) ;
         int height = windowHeight / (maxY - minY+2);
 
-        GridPane grid = new GridPane();
+        int objectSize = Math.min(width-6, height-6);
 
         grid.setGridLinesVisible(true);
         grid.setMinWidth(width);
@@ -73,19 +115,24 @@ public class App extends Application {
             for (int y = minY; y <= maxY; y++){
                 Vector2d position = new Vector2d(x, y);
                 if (map.isOccupied( position )){
-                    Label label = new Label(map.objectAt(position).toString());
+                    AbstractWorldMapElement object = (AbstractWorldMapElement) map.objectAt(position);
+                    VBox box = new GuiElementBox(object, objectSize).getVBox();
                     int xOnMap = x - minX + 1;
                     int yOnMap = maxY - y + 1;
 
-                    grid.add(label, xOnMap, yOnMap);
-                    GridPane.setHalignment(label, HPos.CENTER);
+                    grid.add(box, xOnMap, yOnMap);
+                    GridPane.setHalignment(box, HPos.CENTER);
                 }
             }
         }
-
-        Scene scene = new Scene(grid, windowWidth, windowHeight);
-        primaryStage.setTitle(title);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    }
+    public void refresh() {
+        Platform.runLater( () -> {
+            this.grid.getChildren().clear();
+            this.grid.getColumnConstraints().clear();
+            this.grid.getRowConstraints().clear();
+            grid.setGridLinesVisible(false);
+            this.newGrid();
+        });
     }
 }

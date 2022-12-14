@@ -19,7 +19,7 @@ public class MapBoundary implements IPositionChangeObserver {
         this.yOrder.add(position);
     }
 
-    private void removePosition(Vector2d position) {
+    public void removePosition(Vector2d position) {
         this.xOrder.remove(position);
         this.yOrder.remove(position);
     }
