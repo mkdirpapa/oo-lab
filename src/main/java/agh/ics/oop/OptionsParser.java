@@ -7,7 +7,7 @@ import static java.lang.System.out;
 
 
 public class OptionsParser {
-    public static MoveDirection[] parse(String[] directions) {
+    public static MoveDirection[] parse(String[] directions) throws IllegalArgumentException{
         return Stream.of(directions)
                 .map(getStringMoveDirection()
                 )
@@ -15,14 +15,14 @@ public class OptionsParser {
                 .toArray(MoveDirection[]::new);
     }
 
-    private static Function<String, MoveDirection> getStringMoveDirection() {
+    private static Function<String, MoveDirection> getStringMoveDirection() throws IllegalArgumentException{
         return instruction ->
                 switch (instruction) {
                     case "f", "forward" -> MoveDirection.FORWARD;
                     case "b", "backward" -> MoveDirection.BACKWARD;
                     case "l", "left" -> MoveDirection.LEFT;
                     case "r", "right" -> MoveDirection.RIGHT;
-                    default -> null;
+                    default -> throw new IllegalArgumentException(instruction + " is not a valid argument!");
                 };
     }
 }
